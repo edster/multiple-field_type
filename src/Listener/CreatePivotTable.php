@@ -46,19 +46,32 @@ class CreatePivotTable
             return;
         }
 
+        $isSortable = $fieldType->config('sortable', false);
+
         $table = $assignment->getStreamPrefix() . $assignment->getStreamSlug() . '_' . $fieldType->getField();
 
         $this->schema->dropIfExists($table);
 
         $this->schema->create(
             $table,
-            function (Blueprint $table) {
+            function (Blueprint $table) use ($isSortable) {
+
+                if ($isSortable) {
+                    $table->increments('id');
+                }
 
                 $table->integer('entry_id');
                 $table->integer('related_id');
                 $table->integer('sort_order')->nullable();
 
-                $table->primary(['entry_id', 'related_id']);
+
+                if ($isSortable) {
+                    $table->unique(['entry_id', 'related_id']);
+                }
+
+                if (!$isSortable) {
+                    $table->primary(['entry_id', 'related_id']);
+                }
             }
         );
     }
