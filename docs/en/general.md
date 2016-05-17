@@ -22,10 +22,11 @@ The multiple field type provides a multi-select input for a related model.
         'example' => [
             'type'   => 'anomaly.field_type.multiple',
             'config' => [
-                'related' => 'Anomaly\UsersModule\User\UserModel',
-                'min'     => 1,
-                'max'     => 10,
-                'handler' => 'Anomaly\MultipleFieldType\MultipleFieldTypeOptions@handle'
+                'related'  => 'Anomaly\UsersModule\User\UserModel',
+                'min'      => 1,
+                'max'      => 10,
+                'sortable' => false
+                'handler'  => 'Anomaly\MultipleFieldType\MultipleFieldTypeOptions@handle'
             ]
         ]
     ];
@@ -41,6 +42,10 @@ The minimum number of relations allowed. By Default no minimum is enforced.
 ### `max`
 
 The maximum number of relations allowed. By Default no maximum is enforced.
+
+### `sortable`
+
+If this relationship will be sortable. By Default the relationship is not sortable.
 
 ### `handler`
 
