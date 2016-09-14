@@ -10,7 +10,6 @@ use Anomaly\Streams\Platform\Model\EloquentCollection;
 use Anomaly\Streams\Platform\Support\Collection;
 use Anomaly\Streams\Platform\Ui\Form\FormBuilder;
 use Illuminate\Container\Container;
-use Illuminate\Contracts\Bus\SelfHandling;
 use Illuminate\Contracts\Cache\Repository;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -21,11 +20,9 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
  * @link          http://pyrocms.com/
  * @author        PyroCMS, Inc. <support@pyrocms.com>
  * @author        Ryan Thompson <ryan@pyrocms.com>
- * @package       Anomaly\MultipleFieldType
  */
-class MultipleFieldType extends FieldType implements SelfHandling
+class MultipleFieldType extends FieldType
 {
-
     use DispatchesJobs;
 
     /**
@@ -61,12 +58,21 @@ class MultipleFieldType extends FieldType implements SelfHandling
     ];
 
     /**
+     * The field type rules.
+     *
+     * @var array
+     */
+    protected $rules = [
+        'array',
+    ];
+
+    /**
      * The field type config.
      *
      * @var array
      */
     protected $config = [
-        'mode' => 'tags'
+        'mode' => 'tags',
     ];
 
     /**
@@ -109,17 +115,33 @@ class MultipleFieldType extends FieldType implements SelfHandling
      */
     public function ids()
     {
-        // Return post data likely.
-        if (is_array($array = $this->getValue())) {
-            return $array;
+        $value = $this->getValue();
+
+        if (is_object($value)) {
+            $value = $value->pluck('id')->all();
         }
 
-        /* @var EloquentCollection $relation */
-        if ($relation = $this->getValue()) {
-            return $relation->lists('id')->all();
+        return array_filter($value);
+    }
+
+    /**
+     * Get the rules.
+     *
+     * @return array
+     */
+    public function getRules()
+    {
+        $rules = parent::getRules();
+
+        if ($min = array_get($this->getConfig(), 'min')) {
+            $rules[] = 'min:' . $min;
         }
 
-        return [];
+        if ($max = array_get($this->getConfig(), 'max')) {
+            $rules[] = 'max:' . $max;
+        }
+
+        return $rules;
     }
 
     /**
@@ -135,7 +157,7 @@ class MultipleFieldType extends FieldType implements SelfHandling
                 $this->getConfig(),
                 [
                     'field' => $this->getField(),
-                    'entry' => get_class($this->getEntry())
+                    'entry' => get_class($this->getEntry()),
                 ]
             ),
             30
@@ -154,25 +176,24 @@ class MultipleFieldType extends FieldType implements SelfHandling
         $value   = $this->getValue();
         $related = $this->getRelatedModel();
 
-        if ($value instanceof EntryCollection) {
-            $value = $value->lists('id')->all();
-        }
-
         if ($table = $this->config('value_table')) {
             $table = $this->container->make($table);
         } else {
             $table = $related->newMultipleFieldTypeValueTableBuilder();
         }
 
-        /* @var ValueTableBuilder $table */
         $table->setConfig(new Collection($this->getConfig()))
-            ->setSelected($value ?: [])
             ->setFieldType($this)
-            ->setModel($related)
-            ->build()
-            ->load();
+            ->setModel($related);
 
-        return $table->getTableContent();
+        if (!$value instanceof EntryCollection) {
+            $table->setSelected($value);
+        }
+
+        return $table
+            ->build()
+            ->load()
+            ->getTableContent();
     }
 
     /**
@@ -210,7 +231,7 @@ class MultipleFieldType extends FieldType implements SelfHandling
     /**
      * Set the options.
      *
-     * @param array $options
+     * @param  array $options
      * @return $this
      */
     public function setOptions(array $options)
@@ -257,8 +278,18 @@ class MultipleFieldType extends FieldType implements SelfHandling
      */
     public function getPivotTableName()
     {
-
         return $this->entry->getTableName() . '_' . $this->getField();
+    }
+
+    /**
+     * Get the post value.
+     *
+     * @param  null  $default
+     * @return array
+     */
+    public function getPostValue($default = null)
+    {
+        return explode(',', parent::getPostValue($default));
     }
 
     /**

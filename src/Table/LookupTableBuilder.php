@@ -9,7 +9,6 @@ use Anomaly\Streams\Platform\Ui\Table\TableBuilder;
  * @link          http://pyrocms.com/
  * @author        PyroCMS, Inc. <support@pyrocms.com>
  * @author        Ryan Thompson <ryan@pyrocms.com>
- * @package       Anomaly\MultipleFieldType\Table
  */
 class LookupTableBuilder extends TableBuilder
 {
@@ -55,14 +54,15 @@ class LookupTableBuilder extends TableBuilder
      * @var array
      */
     protected $options = [
-        'title' => 'anomaly.field_type.multiple::message.select_entries'
+        'sortable' => false,
+        'title'    => 'anomaly.field_type.multiple::message.select_entries',
     ];
 
     /**
      * Return a config value.
      *
-     * @param      $key
-     * @param null $default
+     * @param        $key
+     * @param  null  $default
      * @return mixed
      */
     public function config($key, $default = null)
@@ -83,7 +83,7 @@ class LookupTableBuilder extends TableBuilder
     /**
      * Set the config.
      *
-     * @param Collection $config
+     * @param  Collection $config
      * @return $this
      */
     public function setConfig(Collection $config)
