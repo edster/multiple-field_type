@@ -269,7 +269,17 @@ class MultipleFieldType extends FieldType
      */
     public function getRelatedModel()
     {
-        return $this->container->make(array_get($this->getConfig(), 'related'));
+        $model = $this->config('related');
+
+        if (strpos($model, '.')) {
+
+            /* @var StreamInterface $stream */
+            $stream = $this->dispatch(new GetStream($model));
+
+            return $stream->getEntryModel();
+        }
+
+        return $this->container->make($model);
     }
 
     /**
