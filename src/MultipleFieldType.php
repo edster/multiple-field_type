@@ -10,6 +10,7 @@ use Anomaly\Streams\Platform\Model\EloquentCollection;
 use Anomaly\Streams\Platform\Model\EloquentModel;
 use Anomaly\Streams\Platform\Support\Collection;
 use Anomaly\Streams\Platform\Ui\Form\FormBuilder;
+use Anomaly\Streams\Platform\Stream\Command\GetStream;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Cache\Repository;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
