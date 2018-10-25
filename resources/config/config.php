@@ -3,15 +3,15 @@
 use Anomaly\MultipleFieldType\Support\Config\RelatedHandler;
 
 return [
-    'related' => [
-        'required' => true,
+    'related'             => [
+        'required' => TRUE,
         'type'     => 'anomaly.field_type.select',
         'config'   => [
             'handler' => RelatedHandler::class,
         ],
     ],
-    'mode'    => [
-        'required' => true,
+    'mode'                => [
+        'required' => TRUE,
         'type'     => 'anomaly.field_type.select',
         'config'   => [
             'options' => [
@@ -21,13 +21,17 @@ return [
             ],
         ],
     ],
-    'min'     => [
+    'min'                 => [
         'type'   => 'anomaly.field_type.integer',
         'config' => [
             'min' => 1,
         ],
     ],
-    'max'     => [
+    'search_result_limit' => [
+        'type'          => 'anomaly.field_type.integer',
+        'default_value' => 4
+    ],
+    'max'                 => [
         'type'   => 'anomaly.field_type.integer',
         'config' => [
             'min' => 1,
