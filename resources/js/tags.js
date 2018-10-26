@@ -7,6 +7,7 @@
     fields.forEach(function (field) {
         new Choices(field, {
             removeItemButton: true,
+            searchResultLimit: 10,
         });
     });
 })(window, document);
