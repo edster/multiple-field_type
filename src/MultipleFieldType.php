@@ -2,15 +2,12 @@
 
 use Anomaly\MultipleFieldType\Command\BuildOptions;
 use Anomaly\MultipleFieldType\Command\HydrateValueTable;
-use Anomaly\MultipleFieldType\Table\ValueTableBuilder;
 use Anomaly\Streams\Platform\Addon\FieldType\FieldType;
-use Anomaly\Streams\Platform\Entry\Contract\EntryInterface;
 use Anomaly\Streams\Platform\Entry\EntryCollection;
-use Anomaly\Streams\Platform\Model\EloquentCollection;
 use Anomaly\Streams\Platform\Model\EloquentModel;
+use Anomaly\Streams\Platform\Stream\Command\GetStream;
 use Anomaly\Streams\Platform\Support\Collection;
 use Anomaly\Streams\Platform\Ui\Form\FormBuilder;
-use Anomaly\Streams\Platform\Stream\Command\GetStream;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Cache\Repository;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -25,6 +22,7 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
  */
 class MultipleFieldType extends FieldType
 {
+
     use DispatchesJobs;
 
     /**
@@ -102,7 +100,7 @@ class MultipleFieldType extends FieldType
      * Create a new MultipleFieldType instance.
      *
      * @param Repository $cache
-     * @param Container  $container
+     * @param Container $container
      */
     public function __construct(Repository $cache, Container $container)
     {
@@ -296,7 +294,7 @@ class MultipleFieldType extends FieldType
     /**
      * Get the post value.
      *
-     * @param  null  $default
+     * @param  null $default
      * @return array
      */
     public function getPostValue($default = null)

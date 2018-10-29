@@ -1,11 +1,11 @@
 <?php
 
 return [
-    'related' => [
+    'related'    => [
         'label'        => 'Related Stream',
         'instructions' => 'Specify the related stream entries to display in the dropdown.',
     ],
-    'mode'    => [
+    'mode'       => [
         'label'  => 'Input Mode',
         'option' => [
             'tags'       => 'Tags',
@@ -13,12 +13,17 @@ return [
             'checkboxes' => 'Checkboxes',
         ],
     ],
-    'min'     => [
+    'min'        => [
         'label'        => 'Minimum Selections',
         'instructions' => 'Specify the minimum number of allowed selections.',
     ],
-    'max'     => [
+    'max'        => [
         'label'        => 'Maximum Selections',
         'instructions' => 'Specify the maximum number of allowed selections.',
+    ],
+    'title_name' => [
+        'label'        => 'Title Field',
+        'placeholder'  => 'first_name',
+        'instructions' => 'Specify the <strong>slug</strong> of field to display for dropdown/search options.<br>The related stream\'s title column will be used by default.',
     ],
 ];
