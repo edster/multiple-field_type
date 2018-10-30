@@ -22,10 +22,7 @@ return [
         ],
     ],
     'title_name' => [
-        'type'   => 'anomaly.field_type.slug',
-        'config' => [
-            'type' => '_',
-        ],
+        'type' => 'anomaly.field_type.text',
     ],
     'min'        => [
         'type'   => 'anomaly.field_type.integer',
