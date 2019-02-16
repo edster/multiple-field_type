@@ -37,7 +37,7 @@ class MultipleFieldType extends FieldType
      *
      * @var string
      */
-    protected $inputView = 'anomaly.field_type.multiple::input';
+    protected $inputView = null;
 
     /**
      * The filter view.
@@ -258,7 +258,7 @@ class MultipleFieldType extends FieldType
      */
     public function getInputView()
     {
-        return 'anomaly.field_type.multiple::' . $this->config('mode');
+        return $this->inputView ?: 'anomaly.field_type.multiple::' . $this->config('mode');
     }
 
     /**
