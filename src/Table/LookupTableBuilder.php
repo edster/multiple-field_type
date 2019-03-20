@@ -49,6 +49,13 @@ class LookupTableBuilder extends TableBuilder
     protected $buttons = LookupTableButtons::class;
 
     /**
+     * The table actions.
+     *
+     * @var string
+     */
+    protected $actions = LookupTableActions::class;
+
+    /**
      * The table options.
      *
      * @var array

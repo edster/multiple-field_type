@@ -5,12 +5,12 @@ $(document).on('ajaxComplete ready', function () {
 
         $(this).attr('data-initialized', '');
 
-        var input = $(this);
-        var field = input.data('field_name');
-        var wrapper = input.closest('.form-group');
-        var modal = $('#' + field + '-modal');
+        let input = $(this);
+        let field = input.data('field_name');
+        let wrapper = input.closest('.form-group');
+        let modal = $('#' + field + '-modal');
 
-        var selected = $('[name="' + field + '"]').val().split(',');
+        let selected = $('[name="' + field + '"]').val().split(',');
 
         modal.on('click', '[data-entry]', function (e) {
 
@@ -27,6 +27,25 @@ $(document).on('ajaxComplete ready', function () {
             });
 
             $(wrapper).find('[data-dismiss="multiple"]').removeClass('hidden');
+        });
+
+        modal.on('click', '[name="action"][value="add_selected"]', function(e) {
+
+            e.preventDefault();
+
+            $('input[type="checkbox"][data-toggle="action"]:checked').each(function () {
+                selected.push(String($(this).val()));
+                $(this).closest('tr').addClass('success').fadeOut();
+            });
+
+            $('[name="' + field + '"]').val(selected.join(','));
+
+            wrapper.find('.selected').load(
+                REQUEST_ROOT_PATH + '/streams/multiple-field_type/selected/' + $(this).data('key') + '?uploaded=' + selected.join(','),
+                function() {
+                    wrapper.sort();
+                }
+            );
         });
 
         $(wrapper).on('click', '[data-dismiss="multiple"]', function (e) {
