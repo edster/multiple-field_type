@@ -2,6 +2,7 @@
 
 use Anomaly\MultipleFieldType\Command\BuildOptions;
 use Anomaly\MultipleFieldType\Command\HydrateValueTable;
+use Anomaly\MultipleFieldType\Table\ValueTableBuilder;
 use Anomaly\Streams\Platform\Addon\FieldType\FieldType;
 use Anomaly\Streams\Platform\Entry\EntryCollection;
 use Anomaly\Streams\Platform\Model\EloquentModel;
@@ -182,12 +183,17 @@ class MultipleFieldType extends FieldType
             $table = $related->newMultipleFieldTypeValueTableBuilder();
         }
 
+        /* @var ValueTableBuilder $table */
         $table->setConfig(new Collection($this->getConfig()))
             ->setFieldType($this)
             ->setModel($related);
 
         if (!$value instanceof EntryCollection) {
             $table->setSelected((array)$value);
+        }
+
+        if ($value instanceof EntryCollection) {
+            $table->setSelected($value->ids());
         }
 
         return $table
