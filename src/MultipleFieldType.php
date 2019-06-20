@@ -1,10 +1,10 @@
 <?php namespace Anomaly\MultipleFieldType;
 
 use Anomaly\MultipleFieldType\Command\BuildOptions;
-use Anomaly\MultipleFieldType\Command\HydrateValueTable;
 use Anomaly\MultipleFieldType\Table\ValueTableBuilder;
 use Anomaly\Streams\Platform\Addon\FieldType\FieldType;
 use Anomaly\Streams\Platform\Entry\EntryCollection;
+use Anomaly\Streams\Platform\Model\EloquentCollection;
 use Anomaly\Streams\Platform\Model\EloquentModel;
 use Anomaly\Streams\Platform\Stream\Command\GetStream;
 use Anomaly\Streams\Platform\Support\Collection;
@@ -17,9 +17,9 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 /**
  * Class MultipleFieldType
  *
- * @link          http://pyrocms.com/
- * @author        PyroCMS, Inc. <support@pyrocms.com>
- * @author        Ryan Thompson <ryan@pyrocms.com>
+ * @link   http://pyrocms.com/
+ * @author PyroCMS, Inc. <support@pyrocms.com>
+ * @author Ryan Thompson <ryan@pyrocms.com>
  */
 class MultipleFieldType extends FieldType
 {
@@ -53,8 +53,8 @@ class MultipleFieldType extends FieldType
      * @var array
      */
     protected $handlers = [
-        //'fields'      => 'Anomaly\MultipleFieldType\Handler\Fields@handle',
         'related' => 'Anomaly\MultipleFieldType\Handler\Related@handle',
+        //'fields'      => 'Anomaly\MultipleFieldType\Handler\Fields@handle',
         //'assignments' => 'Anomaly\MultipleFieldType\Handler\Assignments@handle'
     ];
 
@@ -337,5 +337,33 @@ class MultipleFieldType extends FieldType
 
         // See the accessor for how IDs are handled.
         $entry->{$this->getField()} = $this->getPostValue();
+    }
+
+    /**
+     * Fired just before version comparison.
+     *
+     * @param EloquentCollection $related
+     */
+    public function toArrayForComparison(EloquentCollection $related)
+    {
+        return $related->map(
+            function (EloquentModel $model) {
+                return array_diff_key(
+                    $model->toArrayWithRelations(),
+                    array_flip(
+                        [
+                            'id',
+                            'sort_order',
+                            'created_at',
+                            'created_by_id',
+                            'updated_at',
+                            'updated_by_id',
+                            'deleted_at',
+                            'deleted_by_id',
+                        ]
+                    )
+                );
+            }
+        )->toArray();
     }
 }
