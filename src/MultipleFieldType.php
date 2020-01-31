@@ -13,6 +13,7 @@ use Illuminate\Container\Container;
 use Illuminate\Contracts\Cache\Repository;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Support\Facades\Crypt;
 
 /**
  * Class MultipleFieldType
@@ -152,19 +153,13 @@ class MultipleFieldType extends FieldType
      */
     public function key()
     {
-        $this->cache->put(
-            'anomaly/multiple-field_type::' . ($key = md5(json_encode($this->getConfig()))),
-            array_merge(
+        return Crypt::encrypt(array_merge(
                 $this->getConfig(),
                 [
                     'field' => $this->getField(),
                     'entry' => get_class($this->getEntry()),
                 ]
-            ),
-            30
-        );
-
-        return $key;
+            ));
     }
 
     /**
